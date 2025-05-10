@@ -30,8 +30,9 @@ youtube = build(API_SERVICE_NAME, API_VERSION, developerKey=API_KEY)
 # Initialize without a page token for the first iteration
 next_page_token = None
 
-# Video listing starts at index 1
-index = 1
+# Initialize total_duration variable as a timedelta object
+# to keep track of the total duration of the playlist
+total_duration = timedelta()
 
 # Loop through all items in the playlist, one page at a time
 while True:
@@ -62,19 +63,38 @@ while True:
                     id=video_id
                 ).execute()
 
-                print(f"{index} - {title}")
-                # Increment the index by 1 to keep track of the video number 
-                index +=1
+                # Extract the duration data from the video_response, which is in 'ISO 8601 duration format'
+                duration_iso = video_response['items'][0]['contentDetails']['duration']
+                # Convert ISO 8601 duration string intro a Python timedelta object
+                duration = parse_duration(duration_iso)
+                # Add the duration of current video to the total_duration
+                total_duration += duration
+
             # Display error message and continue processing
             except HttpError as error:
                 print(f"\nFailed to fetch video details. Video ID: {video_id} \n\nError: {error}\n")
                 continue
-    
+
+
         # Get nextPageToken from response to fetch the next page of results
         next_page_token = response.get('nextPageToken')
+
         # If there is no nextPageToken, we have iterated through all items in the playlist
         if not next_page_token:
+
+            # Convert total_duration to seconds and store the result as an integer
+            total_seconds = int(total_duration.total_seconds())
+
+            # Convert total_seconds into hours, minutes and seconds
+            hours = total_seconds // 3600
+            minutes = (total_seconds % 3600) // 60
+            seconds = total_seconds % 60
+
+            # Print the total duration of all videos in the playlist
+            print(f"{hours} Hours {minutes} Minutes {seconds} Seconds")
+
             break
+
     # Break the loop if an error occurs to stop further processing
     except HttpError as error:
         print(f"\nFailed to fetch playlist items: \n\nError: {error}\n")

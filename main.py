@@ -1,4 +1,5 @@
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 from datetime import timedelta
 from isodate import parse_duration
 import os, sys
@@ -34,37 +35,47 @@ index = 1
 
 # Loop through all items in the playlist, one page at a time
 while True:
-    response = youtube.playlistItems().list(
-        # Ask for 'snippet' to get video metadata
-        part="snippet",
-        playlistId=PLAYLIST_ID,
-        # maxResults cannot exceed 50 (API limit)
-        maxResults=50,
-        # Use pageToken to get next page of results
-        pageToken=next_page_token
-    ).execute()
-
-    # Iterate through each video in the playlist response
-    for item in response['items']:
-        # Extract the title of the video
-        title = item['snippet']['title']
-        # Extract video ID from the playlist item
-        video_id = item['snippet']['resourceId']['videoId']
-    
-        # Fetch video details using video ID
-        video_response = youtube.videos().list(
-            # Ask for details of the video
-            part="contentDetails",
-            # Identyify the video by its ID
-            id=video_id
+    try:
+        response = youtube.playlistItems().list(
+            # Ask for 'snippet' to get video metadata
+            part="snippet",
+            playlistId=PLAYLIST_ID,
+            # maxResults cannot exceed 50 (API limit)
+            maxResults=50,
+            # Use pageToken to get next page of results
+            pageToken=next_page_token
         ).execute()
 
-        print(f"{index} - {title}")
-        # Increment the index by 1 to keep track of the video number 
-        index +=1
+        # Iterate through each video in the playlist response
+        for item in response['items']:
+            # Extract the title of the video
+            title = item['snippet']['title']
+            # Extract video ID from the playlist item
+            video_id = item['snippet']['resourceId']['videoId']
     
-    # Get nextPageToken from response to fetch the next page of results
-    next_page_token = response.get('nextPageToken')
-    # If there is no nextPageToken, we have iterated through all items in the playlist
-    if not next_page_token:
+            try:
+                # Fetch video details using video ID
+                video_response = youtube.videos().list(
+                    # Ask for details of the video
+                    part="contentDetails",
+                    # Identyify the video by its ID
+                    id=video_id
+                ).execute()
+
+                print(f"{index} - {title}")
+                # Increment the index by 1 to keep track of the video number 
+                index +=1
+            # Display error message and continue processing
+            except HttpError as error:
+                print(f"\nFailed to fetch video details. Video ID: {video_id} \n\nError: {error}\n")
+                continue
+    
+        # Get nextPageToken from response to fetch the next page of results
+        next_page_token = response.get('nextPageToken')
+        # If there is no nextPageToken, we have iterated through all items in the playlist
+        if not next_page_token:
+            break
+    # Break the loop if an error occurs to stop further processing
+    except HttpError as error:
+        print(f"\nFailed to fetch playlist items: \n\nError: {error}\n")
         break

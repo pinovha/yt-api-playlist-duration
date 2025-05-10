@@ -60,7 +60,7 @@ while True:
             video_response = youtube.videos().list(
                 # Ask for details of the video
                 part="contentDetails",
-                # Combine all collected 50 video IDs into a single string, separated by commas
+                # Combine all collected video IDs into a single string, separated by commas
                 id=','.join(videos_ids)
             ).execute()
 

@@ -1,7 +1,7 @@
 from googleapiclient.discovery import build
 from datetime import timedelta
 from isodate import parse_duration
-import os
+import os, sys
 
 # In the terminal, set the environment variable:
 # export API_KEY="your-api-key-here"
@@ -9,9 +9,19 @@ import os
 # Fetch the API_KEY from the environment
 API_KEY = os.getenv("API_KEY")
 
+# Check if the number of command-line arguments is exactly 2
+if len(sys.argv) != 2:
+    print(f"""
+          This program requires exactly one argument after script name to run correctly:
+          Usage: file_name.py playlist_id
+          """)
+    sys.exit(1)
+
+# Assign second argument from command-line (the one after the script name) to the variable 'PLAYLIST_ID'
+PLAYLIST_ID = sys.argv[1]
+
 API_SERVICE_NAME = "youtube"
 API_VERSION = "v3"
-PLAYLIST_ID = "PLOYHgt8dIdozG4A2A1lFj5UBJJ4ywl0FV"
 
 # Build the Youtube API client
 youtube = build(API_SERVICE_NAME, API_VERSION, developerKey=API_KEY)

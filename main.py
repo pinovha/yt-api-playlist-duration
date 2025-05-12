@@ -62,19 +62,13 @@ while True:
             # Extract video ID from the playlist item and append to the list
             videos_ids.append(item['contentDetails']['videoId'])
             
-        try:
-            # Fetch video details using video ID
-            video_response = youtube.videos().list(
-                # Ask for details of the video
-                part="contentDetails",
-                # Combine all collected video IDs into a single string, separated by commas
-                id=','.join(videos_ids)
-            ).execute()
-
-        # Display error message and continue processing
-        except HttpError as error:
-            print(f"\nFailed to fetch video details. \n\nError: {error}\n")
-            continue
+        # Fetch video details using video ID
+        video_response = youtube.videos().list(
+            # Ask for details of the video
+            part="contentDetails",
+            # Combine all collected video IDs into a single string, separated by commas
+            id=','.join(videos_ids)
+        ).execute()
 
         # Iterate through each item in video_response
         for item in video_response['items']:
@@ -106,7 +100,7 @@ while True:
 
             break
 
-    # Break the loop if an error occurs to stop further processing
+    # Break the loop if an error occurs while calling the Youtube API
     except HttpError as error:
-        print(f"\nFailed to fetch playlist items: \n\nError: {error}\n")
+        print(f"\nError:\n {error}\n")
         break

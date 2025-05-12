@@ -1,4 +1,4 @@
-# Youtube Playlist Duration API
+# YouTube Playlist Duration API
 Simple API to calculate the total duration of any public YouTube playlist.
 
 ### Run Locally

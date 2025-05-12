@@ -1,5 +1,5 @@
 [project]
-name = "YouTube Playlist Duration API"
+name = "yt-api-playlist-duration"
 version = "0.1.0"
 description = "Calculate total duration of a YouTube playlist."
 readme = "README.md"

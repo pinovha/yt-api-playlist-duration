@@ -10,6 +10,13 @@ import os, sys
 # Fetch the API_KEY from the environment
 API_KEY = os.getenv("API_KEY")
 
+# Check if the API_KEY variable is empty or not set
+if not API_KEY:
+    print("""
+          You have not provided the API_KEY variable to the environment
+          """)
+    sys.exit(1)
+
 # Check if the number of command-line arguments is exactly 2
 if len(sys.argv) != 2:
     print(f"""

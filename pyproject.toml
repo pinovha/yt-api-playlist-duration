@@ -3,7 +3,7 @@ name = "yt-api-playlist-duration"
 version = "0.1.0"
 description = "Calculate total duration of a YouTube playlist."
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.10"
 dependencies = [
     "google-api-python-client>=2.169.0",
     "isodate>=0.7.2",

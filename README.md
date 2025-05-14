@@ -1,7 +1,10 @@
 # YouTube Playlist Duration API
 Simple API to calculate the total duration of any public YouTube playlist.
 
-### Run Locally
+## Demo
+![Demo](/images/demo.gif)
+
+## Run Locally
 
 Clone the project:
 
@@ -15,13 +18,13 @@ Navigate to the project directory:
   cd yt-api-playlist-duration
 ```
 
-Install necessary libraries:
+Install dependencies:
 ```bash
   pip install -r requirements.txt
 ```
 
-Set your YouTube API key as an environment variable:
-
+Set your YouTube API key as an environment variable: \
+(Linux / macOS)
 ```bash
   export API_KEY="your-api-key-here"
 ```
@@ -32,11 +35,11 @@ Run script with playlist ID as an argument:
   python3 main.py PLAYLIST_ID
 ```
 
-### Where to find the Playlist ID
-Playlist ID is the part after `?list=` \
+## Where to find the Playlist ID
+Playlist ID is the string that comes after `?list=` in URL. \
 `https://www.youtube.com/playlist?list=PLAYLIST_ID` 
 
-### API Request Breakdown
+## API Request Breakdown
 
 Here is how the requests are made:
 
